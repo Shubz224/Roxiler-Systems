@@ -49,7 +49,7 @@ const refresh = async (req, res) => {
 
 // POST /auth/logout
 const logout = async (req, res) => {
-  res.clearCookie('refreshToken');
+  res.clearCookie('refreshToken', refreshCookieOptions);
   return res.success(null, 'Logged out successfully');
 };
 

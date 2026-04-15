@@ -34,18 +34,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Wire Axios interceptors to our state
-  // We use a ref-like getter inside since closures in Axios would capture old state
-  let currentToken = token;
-  injectAuthHelpers(
-    () => currentToken,
-    (newToken) => setToken(newToken)
-  );
+  // Wire Axios interceptors to our state using useRef to avoid stale closures
+  const tokenRef = React.useRef(token);
   
-  // Make sure currentToken is always up to date for the interceptor
   useEffect(() => {
-    currentToken = token;
+    tokenRef.current = token;
   }, [token]);
+
+  useEffect(() => {
+    injectAuthHelpers(
+      () => tokenRef.current,
+      (newToken) => setToken(newToken)
+    );
+  }, []);
 
   // Initial load: Attempt silent refresh to restore session
   useEffect(() => {
