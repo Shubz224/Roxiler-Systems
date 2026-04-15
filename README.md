@@ -3,15 +3,15 @@
 A production-ready Full-Stack Store Rating Platform implementing strict Role-Based Access Control (RBAC), secure JWT authentication, and comprehensive analytics dashboards.
 
 ## 🚀 Live Deployments
-- **Frontend** (Vercel): [Your Frontend URL Here]
-- **Backend / API** (Render): [Your Backend URL Here]
+- **Check this out** (Vercel): http://roxiler-systems-one.vercel.app
+
 
 > **Note to Reviewer:** You can quickly test all RBAC routing capabilities using these live seeded credentials:
 > | Role | Email | Password |
 > | :--- | :--- | :--- |
-> | **Admin** | `admin@example.com` | `Admin@1234!` |
-> | **Store Owner** | `owner@example.com` | `Owner@1234!` |
-> | **Normal User** | `user@example.com` | `User@1234!` |
+> | **Admin** | `admin@example.com` | `Admin@1234` |
+> | **Store Owner** | `owner@example.com` | `Owner@1234` |
+> | **Normal User** | `user@example.com` | `User@1234` |
 
 ## 🛠️ Technology Stack
 
