@@ -2,8 +2,8 @@ const prisma = require('../config/db');
 const cache = require('../cache/cache');
 const bcrypt = require('bcryptjs');
 
-// --- Dashboard ---
-// Cached for 60 seconds to reduce DB load
+// admin dashboard service
+// cached to limit db load
 const getDashboardStats = async () => {
   const cached = cache.get('dashboard_stats');
   if (cached) return cached;
@@ -19,9 +19,9 @@ const getDashboardStats = async () => {
   return stats;
 };
 
-// --- Users ---
+// users service
 
-// List users with optional search filters + sorting
+// fetch users with active filters
 const getAllUsers = async ({ name, email, role, sortBy = 'name', sortOrder = 'asc' }) => {
   const validSortFields = ['name', 'email', 'createdAt'];
   const orderField = validSortFields.includes(sortBy) ? sortBy : 'name';
@@ -37,7 +37,7 @@ const getAllUsers = async ({ name, email, role, sortBy = 'name', sortOrder = 'as
   });
 };
 
-// Get single user — if Store Owner, also return their store's average rating
+// return specific user and their specific rating data if owner
 const getUserById = async (id) => {
   const user = await prisma.user.findUnique({
     where: { id },
@@ -77,9 +77,9 @@ const createUser = async ({ name, email, address, password, role }) => {
   return user;
 };
 
-// --- Stores ---
+// stores service
 
-// List stores with optional search + sorting
+// list paginated stores
 const getAllStores = async ({ name, email, address, sortBy = 'name', sortOrder = 'asc' }) => {
   const validSortFields = ['name', 'email', 'createdAt'];
   const orderField = validSortFields.includes(sortBy) ? sortBy : 'name';
@@ -109,7 +109,7 @@ const getAllStores = async ({ name, email, address, sortBy = 'name', sortOrder =
   });
 };
 
-// Create a store — ownerId must be a STORE_OWNER user
+// generate new store and link to owner user
 const createStore = async ({ name, email, address, ownerId }) => {
   const owner = await prisma.user.findUnique({ where: { id: ownerId } });
   if (!owner) throw new Error('Owner not found');

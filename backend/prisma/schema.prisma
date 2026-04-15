@@ -1,5 +1,5 @@
-// This is your Prisma schema file
-// It defines the database structure for the Store Rating Platform
+// schema for Prisma DB
+// store rating app models
 
 generator client {
   provider = "prisma-client-js"
@@ -20,7 +20,7 @@ model User {
   createdAt DateTime @default(now())
 
   ratings Rating[]
-  store   Store? // only if role is STORE_OWNER
+  store   Store?
 }
 
 model Store {
@@ -29,7 +29,7 @@ model Store {
   email     String   @unique
   address   String   @db.VarChar(400)
   owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   Int      @unique // one owner can have only one store
+  ownerId   Int      @unique
   createdAt DateTime @default(now())
 
   ratings Rating[]
@@ -37,14 +37,14 @@ model Store {
 
 model Rating {
   id        Int      @id @default(autoincrement())
-  rating    Int // validated 1-5 in Joi schema
+  rating    Int
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   store     Store    @relation(fields: [storeId], references: [id])
   storeId   Int
   createdAt DateTime @default(now())
 
-  @@unique([userId, storeId]) // one rating per user per store — enforced at DB level
+  @@unique([userId, storeId])
 }
 
 enum Role {

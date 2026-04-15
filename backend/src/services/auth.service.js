@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/db');
 
-// Generate a short-lived access token (15 minutes)
+// helper for access tokens
 const generateAccessToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
@@ -11,7 +11,7 @@ const generateAccessToken = (user) => {
   );
 };
 
-// Generate a long-lived refresh token (7 days)
+// helper for refresh tokens
 const generateRefreshToken = (user) => {
   return jwt.sign(
     { id: user.id },
@@ -20,9 +20,9 @@ const generateRefreshToken = (user) => {
   );
 };
 
-// --- Signup ---
+// signup logic
 const signup = async ({ name, email, address, password }) => {
-  // Check if email already exists
+  // uniqueness check
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) throw new Error('Email already registered');
 
@@ -35,7 +35,7 @@ const signup = async ({ name, email, address, password }) => {
   return { id: user.id, name: user.name, email: user.email, role: user.role };
 };
 
-// --- Login ---
+// login logic
 const login = async ({ email, password }) => {
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) throw new Error('Invalid email or password');
@@ -53,7 +53,7 @@ const login = async ({ email, password }) => {
   };
 };
 
-// --- Refresh Token ---
+// refresh logic
 const refresh = async (refreshToken) => {
   if (!refreshToken) throw new Error('Refresh token required');
 
@@ -68,12 +68,12 @@ const refresh = async (refreshToken) => {
   if (!user) throw new Error('User not found');
 
   const newAccessToken = generateAccessToken(user);
-  const newRefreshToken = generateRefreshToken(user); // rotate refresh token
+  const newRefreshToken = generateRefreshToken(user);
 
   return { accessToken: newAccessToken, refreshToken: newRefreshToken };
 };
 
-// --- Change Password ---
+// password reset logic
 const changePassword = async (userId, { currentPassword, newPassword }) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error('User not found');

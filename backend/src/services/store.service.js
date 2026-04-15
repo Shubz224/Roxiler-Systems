@@ -1,6 +1,6 @@
 const prisma = require('../config/db');
 
-// Get all stores — search by name/address, paginate, sort
+// fetch stores with filters
 const getAllStores = async ({ name, address, page = 1, limit = 10, sortBy = 'name', sortOrder = 'asc' }) => {
   const skip = (page - 1) * limit;
   const validSortFields = ['name', 'email', 'address', 'createdAt'];
@@ -42,7 +42,7 @@ const getAllStores = async ({ name, address, page = 1, limit = 10, sortBy = 'nam
   return { stores: result, total, page: Number(page), limit: Number(limit) };
 };
 
-// Get single store — includes avg rating and the current user's own rating
+// fetch store details
 const getStoreById = async (storeId, userId) => {
   const store = await prisma.store.findUnique({
     where: { id: storeId },

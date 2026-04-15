@@ -12,11 +12,11 @@ const ownerRoutes = require('./routes/owner.routes');
 
 const app = express();
 
-// --- Security & Parsing Middleware ---
+// apply middleware configs
 app.use(helmet());
 app.use(cors({
   origin: process.env.CLIENT_URL,
-  credentials: true, // needed for httpOnly cookies to be sent cross-origin
+  credentials: true,
 }));
 app.use(express.json());
 app.use(cookieParser()); // parses cookies from req.cookies
@@ -39,7 +39,7 @@ app.use((err, req, res, next) => {
   return res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
-// --- Start Server ---
+// start node server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

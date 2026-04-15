@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-// Password: 8-16 chars, at least one uppercase letter, one special character
+// pwd constraints
 const passwordSchema = Joi.string()
   .min(8)
   .max(16)
@@ -13,7 +13,7 @@ const passwordSchema = Joi.string()
     'string.pattern.name': 'Password must include at least one {#name}',
   });
 
-// --- Auth ---
+// auth schemas
 
 const signupSchema = Joi.object({
   name: Joi.string().min(20).max(60).required().messages({
@@ -39,7 +39,7 @@ const changePasswordSchema = Joi.object({
   newPassword: passwordSchema,
 });
 
-// --- Admin ---
+// admin schemas
 
 const createUserSchema = Joi.object({
   name: Joi.string().min(20).max(60).required(),
@@ -56,7 +56,7 @@ const createStoreSchema = Joi.object({
   ownerId: Joi.number().integer().required(),
 });
 
-// --- Rating ---
+// rating schemas
 
 const ratingSchema = Joi.object({
   rating: Joi.number().integer().min(1).max(5).required().messages({
@@ -65,7 +65,7 @@ const ratingSchema = Joi.object({
   }),
 });
 
-// --- Middleware helper: validates req.body against a Joi schema ---
+// validation middleware
 const validate = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.body, { abortEarly: false });
   if (error) {
